@@ -80,7 +80,7 @@ history -a file
 
 1. **Clone the repo**
 ```bash
-git clone https://github.com/Lambo-IITian/Shell.git
+git clone https://github.com/trishantjaiswal/BuildShell
 cd Shell
 ```
 
