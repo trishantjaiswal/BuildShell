@@ -1,92 +1,98 @@
-# 🧠 C++ Memory Tracker  
-### A Runtime Memory Leak Detection Tool Built from First Principles
+🐚 BuildShell — A Mini Unix Shell in C++
 
-> *Understanding memory is more important than memorizing tools.*
+A lightweight, feature-rich Unix-like shell built from scratch in C++
+using system calls, readline, and a lot of curiosity.
 
----
+BuildShell is a custom command-line shell that supports execution of
+system programs, built-in commands, pipelines, redirection, history
+management, and tab completion. It is designed to explore how real
+shells like bash and zsh work under the hood.
 
-## 📌 Overview
+------------------------------------------------------------------------
 
-**Memory Tracker** is a lightweight C++ runtime tool that detects **memory leaks and incorrect deallocations** by intercepting global dynamic memory operations (`new`, `delete`, `new[]`, `delete[]`).
+FEATURES
 
-Instead of relying on external debuggers like Valgrind, this project focuses on **building the core mechanism from scratch** to deeply understand how memory tracking tools work at runtime.
+Core Shell Features - Execute external programs using fork() + execv() -
+PATH resolution for commands - Built-in commands support - Robust
+command parsing with quotes and escapes
 
-The implementation is intentionally **low-level, explicit, and transparent**, emphasizing correctness and runtime behavior over abstraction.
+Built-in Commands - cd — change directory - pwd — print working
+directory - echo — print arguments - exit — exit shell safely - type —
+identify command type - history — command history management
 
----
+Redirection Supports: > redirect stdout >> append stdout 2> redirect
+stderr 2>> append stderr
 
-## 🎯 Why This Project Matters
+Example: echo hello > out.txt ls 2> err.txt
 
-Most C++ projects *use* memory debugging tools.  
-This project **builds one**.
+Pipelines Chain commands like a real shell: ls | grep cpp | wc -l
 
-It demonstrates:
-- A clear understanding of the **heap allocation lifecycle**
-- Correct global operator overloading in modern C++
-- Handling of subtle runtime pitfalls (recursion, STL self-allocation)
-- A systems-level debugging mindset
+Command History - Persistent history using HISTFILE - Load history on
+startup - Append history on exit Options: history -r file history -w
+file history -a file
 
----
+Smart Tab Completion - Executables from PATH - Built-in commands -
+Longest Common Prefix completion - Double-TAB to list suggestions
 
-## ✨ Features
+Quote Handling - Single quotes - Double quotes with escapes - Backslash
+escaping
 
-- Intercepts **all global dynamic allocations**
-- Tracks allocation metadata at runtime:
-  - address
-  - size
-  - allocation type (`new` vs `new[]`)
-- Detects:
-  - memory leaks
-  - mismatched deallocations
-  - invalid / double deletes
-- Automatically prints a memory report at program exit
-- Clean separation between interface (`.h`) and implementation (`.cpp`)
+------------------------------------------------------------------------
 
----
+TECH STACK
 
-## 🧠 Design Highlights
+Language: C++
 
-### 1. Global `new` / `delete` Interception
-The tracker overrides all global allocation and deallocation operators, ensuring **complete coverage** of heap usage.
+Libraries / APIs: - POSIX system calls (fork, execv, dup2, pipe) - GNU
+Readline - Filesystem & directory APIs - STL
 
-### 2. Malloc-based Internal Storage
-To avoid infinite recursion caused by STL containers allocating memory internally, the tracker uses:
-- a custom `malloc`-based allocator
-- a `thread_local` re-entrancy guard
+------------------------------------------------------------------------
 
-This prevents the tracker from tracking its **own allocations**.
+GETTING STARTED
 
-### 3. Safe Shutdown Reporting
-Memory reports are printed using **C-style I/O (`fprintf`)** instead of `std::cout` to avoid undefined behavior during static destruction.
+1.  Clone the repo git clone https://github.com/Lambo-IITian/Shell.git
+    cd Shell
 
-This mirrors how real-world runtime tools are implemented.
+2.  Compile g++ main.cpp -lreadline -o buildshell
 
----
+3.  Run ./buildshell
 
-## 🛠 Build & Run
+------------------------------------------------------------------------
 
-### Compile
-```bash
-g++ -std=c++17 -O0 -Iinclude src/memory_tracker.cpp examples/leak_demo.cpp -o demo
- Run ./demo
-```
+LEARNING GOALS
 
-## Sample Output
-Total allocations : 3
-Total frees       : 2
-Bytes allocated   : 48
-Bytes freed       : 44
+This project explores: - How shells interpret commands - Process
+creation and management - File descriptor manipulation - Pipes and IPC -
+Environment variables and PATH resolution - Terminal interaction using
+readline
 
-MEMORY LEAKS DETECTED
-Leaked block at 0x55c8f2a3c2a0 of size 4 bytes
+------------------------------------------------------------------------
 
-## Non-Obvious Challenges Solved
--This project explicitly handles several advanced C++ pitfalls:
--Sized delete overloads introduced in C++14
--Infinite recursion in global operator overloading
--STL self-allocation during tracking
--Unsafe I/O during program teardown
+EXAMPLE USAGE
 
-## Author 
-Mohit Gunani
-IIT BHU
+$ echo “Hello Shell” $ cd .. $ pwd $ ls | grep .cpp $ history $ type ls
+
+------------------------------------------------------------------------
+
+FUTURE IMPROVEMENTS
+
+-   Job control (fg, bg, jobs)
+-   Signal handling
+-   Environment variable expansion
+-   Globbing
+-   Aliases
+-   Scripting support
+
+------------------------------------------------------------------------
+
+CONTRIBUTING
+
+Contributions are welcome. Open a PR or issue if you have ideas.
+
+------------------------------------------------------------------------
+
+AUTHOR
+
+Mohit Gunani IIT BHU Systems enthusiast • Builder • Curious engineer
+
+Built to understand the machine, not just use it.
